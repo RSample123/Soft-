@@ -1,0 +1,528 @@
+%%writefile Fuzzy_rikk_34230822037.py
+
+import random
+
+def generate_crisp():
+    return random.randint(1, 10)
+
+def fuzzy_union(l1, l2):
+    return [(l1[i][0], max(l1[i][1], l2[i][1])) for i in range(len(l1))]
+
+def fuzzy_intersection(l1, l2):
+    return [(l1[i][0], min(l1[i][1], l2[i][1])) for i in range(len(l1))]
+
+def fuzzy_complement(l):
+    return [(x[0], 1 - x[1]) for x in l]
+
+def fuzzy_power_set(l):
+    return [(x[0], x[1] ** 2) for x in l]
+
+def fuzzy_algebraic_sum(l1, l2):
+    return [(l1[i][0], (l1[i][1] + l2[i][1]) - (l1[i][1] * l2[i][1])) for i in range(len(l1))]
+
+def fuzzy_algebraic_difference(l1, l2):
+    complement2 = fuzzy_complement(l2)
+    return [(l1[i][0], min(l1[i][1], complement2[i][1])) for i in range(len(l1))]
+
+def fuzzy_algebraic_product(l1, l2):
+    return [(l1[i][0], l1[i][1] * l2[i][1]) for i in range(len(l1))]
+
+def fuzzy_crisp_multiplication(l1, crisp):
+    return [(x[0], x[1] * crisp) for x in l1]
+
+def fuzzy_bounded_sum(l1, l2):
+    return [(l1[i][0], min(1, l1[i][1] + l2[i][1])) for i in range(len(l1))]
+
+def fuzzy_bounded_difference(l1, l2):
+    return [(l1[i][0], max(0, l1[i][1] - l2[i][1])) for i in range(len(l1))]
+
+def fuzzy_cartesian_product(l1, l2):
+    C = []
+    for i in range(len(l1)):
+        for k in range(len(l2)):
+            C.append(((l1[i][0], l2[k][0]), min(l1[i][1], l2[k][1])))
+    return C
+
+def fuzzy_equality(A, B):
+    count = 0
+    if len(A) == len(B):
+        for i in range(len(A)):
+            if A[i][1] == B[i][1]:
+                count += 1
+            else:
+                return "Sets are not equal"
+        if count == len(A):
+            return "Sets are equal"
+    return "Sets are not equal"
+
+
+
+# Main execution code in Colab or Jupyter
+
+import importlib
+import Fuzzy_rikk_34230822037 as fz
+importlib.reload(fz)
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+!mv /content/Fuzzy_rikk_34230822037.py /content/drive/MyDrive/
+
+import sys
+sys.path.append('/content/drive/MyDrive/Colab Notebooks')
+
+import Fuzzy_rikk_34230822037 as fz
+
+# Read input
+f = open("/content/drive/MyDrive/Colab Notebooks/input.txt", "r")
+data = [eval(line.strip()) for line in f]
+A = data[0]
+B = data[1]
+
+print("Fuzzy Set A:", A)
+print("Fuzzy Set B:", B)
+
+crisp = fz.generate_crisp()
+print("The crisp value is:", crisp)
+
+# Perform operations
+union = fz.fuzzy_union(A, B)
+inter = fz.fuzzy_intersection(A, B)
+complement1 = fz.fuzzy_complement(A)
+complement2 = fz.fuzzy_complement(B)
+power_set1 = fz.fuzzy_power_set(A)
+power_set2 = fz.fuzzy_power_set(B)
+sum_fuzzy = fz.fuzzy_algebraic_sum(A, B)
+diff_fuzzy = fz.fuzzy_algebraic_difference(A, B)
+prod_fuzzy = fz.fuzzy_algebraic_product(A, B)
+crisp_mul = fz.fuzzy_crisp_multiplication(A, 2)
+bounded_sum = fz.fuzzy_bounded_sum(A, B)
+bounded_diff = fz.fuzzy_bounded_difference(A, B)
+
+# Write to output file
+with open("/content/drive/MyDrive/Colab Notebooks/output.txt", "w") as output_file:
+    output_file.write(f"Fuzzy Set A: {A}\n")
+    output_file.write(f"Fuzzy Set B: {B}\n")
+    output_file.write(f"Union of the two fuzzy sets: {union}\n")
+    output_file.write(f"Intersection of the two fuzzy sets: {inter}\n")
+    output_file.write(f"Complement of first fuzzy set: {complement1}\n")
+    output_file.write(f"Complement of second fuzzy set: {complement2}\n")
+    output_file.write(f"Power set of first fuzzy set: {power_set1}\n")
+    output_file.write(f"Power set of second fuzzy set: {power_set2}\n")
+    output_file.write(f"The algebraic sum of two fuzzy sets: {sum_fuzzy}\n")
+    output_file.write(f"The algebraic difference of two fuzzy sets: {diff_fuzzy}\n")
+    output_file.write(f"The algebraic product of two fuzzy sets: {prod_fuzzy}\n")
+    output_file.write(f"The crisp multiplication of the first fuzzy set: {crisp_mul}\n")
+    output_file.write(f"The bounded sum of two fuzzy sets: {bounded_sum}\n")
+    output_file.write(f"The bounded difference of two fuzzy sets: {bounded_diff}\n")
+
+print("Output has been written to output.txt")
+---------------------------------------------------------------------------------------------
+import Fuzzy_rikk_34230822037 as fz
+
+A = [(2, 1), (3, 0.5), (4, 0.3), (5, 0.2)]
+B = [(2, 0.5), (3, 0.7), (4, 0.2), (5, 0.4)]
+
+acom = fz.fuzzy_complement(A)
+bcom = fz.fuzzy_complement(B)
+
+print("Answer (1) Union (A ∪ B):", fz.fuzzy_union(A, B))
+print("Answer (2) Intersection (A ∩ B):", fz.fuzzy_intersection(A, B))
+print("Answer (3) Complements (A' and B'):", acom, bcom)
+print("Answer (4) Difference (A - B):", fz.fuzzy_algebraic_difference(A, B))
+print("Answer (5) Difference (B - A):", fz.fuzzy_algebraic_difference(B, A))
+print("Answer (6) De Morgan's Law (A' ∪ B'):", fz.fuzzy_union(acom, bcom))
+print("Answer (7) Intersection of complements (A' ∩ B'):", fz.fuzzy_intersection(acom, bcom))
+-------------------------------------------------------------------------------------------------------
+fuzzification
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# User Inputs
+a = float(input("Enter the value of a: "))
+b = float(input("Enter the value of b: "))
+c = float(input("Enter the value of c: "))
+d = float(input("Enter the value of d: "))
+sigma = float(input("Enter the value of sigma (for Gaussian): "))
+steepness = float(input("Enter the value of steepness (for Sigmoidal): "))
+
+# x range for plotting
+x = np.linspace(a - 2, d + 2, 100)
+
+# Membership Functions
+triangular_f = np.maximum(np.minimum((x - a) / (b - a), (c - x) / (c - b)), 0)
+trapezoidal_f = np.maximum(np.minimum(np.minimum((x - a) / (b - a), 1), (d - x) / (d - c)), 0)
+sigmoid_f = 1 / (1 + np.exp(-steepness * (x - c)))
+gaussian_f = np.exp(-((x - c) ** 2) / (2 * sigma ** 2))
+bell_f = 1 / (1 + np.abs((x - b) / c) ** (2 * d))  # Generalized bell function
+
+# Plotting
+fig, axes = plt.subplots(5, 1, figsize=(8, 12))
+
+axes[0].plot(x, triangular_f, color='blue')
+axes[0].set_title("Triangular Membership Function")
+axes[0].grid()
+
+axes[1].plot(x, trapezoidal_f, color='red')
+axes[1].set_title("Trapezoidal Membership Function")
+axes[1].grid()
+
+axes[2].plot(x, sigmoid_f, color='green')
+axes[2].set_title("Sigmoidal Membership Function")
+axes[2].grid()
+
+axes[3].plot(x, gaussian_f, color='purple')
+axes[3].set_title("Gaussian Membership Function")
+axes[3].grid()
+
+axes[4].plot(x, bell_f, color='orange')
+axes[4].set_title("Generalized Bell Membership Function")
+axes[4].grid()
+
+plt.tight_layout()
+plt.show()
+-----------------------------------------------------------------------------------------
+fuzzification on crisp set
+
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Membership Function Definitions
+def triangular(x, a, b, c):
+    return np.maximum(np.minimum((x - a) / (b - a), (c - x) / (c - b)), 0)
+
+def trapezoidal(x, a, b, c, d):
+    return np.maximum(np.minimum(np.minimum((x - a) / (b - a), 1), (d - x) / (d - c)), 0)
+
+def sigmoid_mf(x, c, b):
+    return 1 / (1 + np.exp(-(x - c) / b))
+
+def gaussian_mf(x, c, b):
+    return np.exp(-((x - c) ** 2) / (2 * b ** 2))
+
+def generalized_bell_mf(x, c, a, b):
+    return 1 / (1 + (np.abs((x - c) / a)) ** (2 * b))
+
+# Interactive Menu
+while True:
+    print("\n1. Triangular MF")
+    print("2. Trapezoidal MF")
+    print("3. Sigmoid MF")
+    print("4. Gaussian MF")
+    print("5. Generalized Bell MF")
+    print("6. Exit")
+
+    try:
+        choice = int(input("Enter your choice: "))
+    except ValueError:
+        print("Please enter a valid number.")
+        continue
+
+    match choice:
+        case 1:  # Triangular MF
+            user_input = float(input("Enter the temperature: "))
+            ac, cc = 5, 15
+            bc = np.mean([ac, cc])
+            am, cm = 12, 29
+            bm = np.mean([am, cm])
+            ah, ch = 25, 55
+            bh = np.mean([ah, ch])
+            x = np.linspace(min(ac, am, ah), max(cc, cm, ch), 100)
+
+            cold_mf = triangular(x, ac, bc, cc)
+            medium_mf = triangular(x, am, bm, cm)
+            hot_mf = triangular(x, ah, bh, ch)
+
+            cold_val = triangular(user_input, ac, bc, cc)
+            medium_val = triangular(user_input, am, bm, cm)
+            hot_val = triangular(user_input, ah, bh, ch)
+
+            print("Cold:", cold_val)
+            print("Medium:", medium_val)
+            print("Hot:", hot_val)
+
+            plt.plot(x, cold_mf, label="Cold", color="blue", linestyle="--")
+            plt.plot(x, medium_mf, label="Medium", color="orange", linestyle="--")
+            plt.plot(x, hot_mf, label="Hot", color="red", linestyle="--")
+            plt.scatter(user_input, cold_val, color="blue")
+            plt.scatter(user_input, medium_val, color="orange")
+            plt.scatter(user_input, hot_val, color="red")
+            plt.legend()
+            plt.grid()
+            plt.title("Triangular Membership Functions")
+            plt.show()
+
+        case 2:  # Trapezoidal MF
+            user_input = float(input("Enter the temperature: "))
+            ac, dc = 5, 15
+            bc = np.mean([ac, dc])
+            cc = np.mean([bc, dc])
+            am, dm = 12, 29
+            bm = np.mean([am, dm])
+            cm = np.mean([bm, dm])
+            ah, dh = 25, 55
+            bh = np.mean([ah, dh])
+            ch = np.mean([bh, dh])
+            x = np.linspace(min(ac, am, ah), max(dc, dm, dh), 100)
+
+            cold_mf = trapezoidal(x, ac, bc, cc, dc)
+            medium_mf = trapezoidal(x, am, bm, cm, dm)
+            hot_mf = trapezoidal(x, ah, bh, ch, dh)
+
+            cold_val = trapezoidal(user_input, ac, bc, cc, dc)
+            medium_val = trapezoidal(user_input, am, bm, cm, dm)
+            hot_val = trapezoidal(user_input, ah, bh, ch, dh)
+
+            print("Cold:", cold_val)
+            print("Medium:", medium_val)
+            print("Hot:", hot_val)
+
+            plt.plot(x, cold_mf, label="Cold", color="blue", linestyle="--")
+            plt.plot(x, medium_mf, label="Medium", color="orange", linestyle="--")
+            plt.plot(x, hot_mf, label="Hot", color="red", linestyle="--")
+            plt.scatter(user_input, cold_val, color="blue")
+            plt.scatter(user_input, medium_val, color="orange")
+            plt.scatter(user_input, hot_val, color="red")
+            plt.legend()
+            plt.grid()
+            plt.title("Trapezoidal Membership Functions")
+            plt.show()
+
+        case 3:  # Sigmoid MF
+            user_input = float(input("Enter the temperature: "))
+            ac, cc = 5, 15
+            center_c = np.mean([ac, cc])
+            b_c = (cc - ac) / 4
+            am, cm = 12, 29
+            center_m = np.mean([am, cm])
+            b_m = (cm - am) / 4
+            ah, ch = 25, 55
+            center_h = np.mean([ah, ch])
+            b_h = (ch - ah) / 4
+            x = np.linspace(min(ac, am, ah), max(cc, cm, ch), 100)
+
+            cold_mf = sigmoid_mf(x, center_c, b_c)
+            medium_mf = sigmoid_mf(x, center_m, b_m)
+            hot_mf = sigmoid_mf(x, center_h, b_h)
+
+            cold_val = sigmoid_mf(user_input, center_c, b_c)
+            medium_val = sigmoid_mf(user_input, center_m, b_m)
+            hot_val = sigmoid_mf(user_input, center_h, b_h)
+
+            print("Cold:", cold_val)
+            print("Medium:", medium_val)
+            print("Hot:", hot_val)
+
+            plt.plot(x, cold_mf, label="Cold", color="blue", linestyle="--")
+            plt.plot(x, medium_mf, label="Medium", color="orange", linestyle="--")
+            plt.plot(x, hot_mf, label="Hot", color="red", linestyle="--")
+            plt.scatter(user_input, cold_val, color="blue")
+            plt.scatter(user_input, medium_val, color="orange")
+            plt.scatter(user_input, hot_val, color="red")
+            plt.legend()
+            plt.grid()
+            plt.title("Sigmoid Membership Functions")
+            plt.show()
+
+        case 4:  # Gaussian MF
+            user_input = float(input("Enter the temperature: "))
+            ac, cc = 5, 15
+            center_c = np.mean([ac, cc])
+            b_c = (cc - ac) / 2
+            am, cm = 12, 29
+            center_m = np.mean([am, cm])
+            b_m = (cm - am) / 2
+            ah, ch = 25, 55
+            center_h = np.mean([ah, ch])
+            b_h = (ch - ah) / 2
+            x = np.linspace(min(ac, am, ah), max(cc, cm, ch), 100)
+
+            cold_mf = gaussian_mf(x, center_c, b_c)
+            medium_mf = gaussian_mf(x, center_m, b_m)
+            hot_mf = gaussian_mf(x, center_h, b_h)
+
+            cold_val = gaussian_mf(user_input, center_c, b_c)
+            medium_val = gaussian_mf(user_input, center_m, b_m)
+            hot_val = gaussian_mf(user_input, center_h, b_h)
+
+            print("Cold:", cold_val)
+            print("Medium:", medium_val)
+            print("Hot:", hot_val)
+
+            plt.plot(x, cold_mf, label="Cold", color="blue", linestyle="--")
+            plt.plot(x, medium_mf, label="Medium", color="orange", linestyle="--")
+            plt.plot(x, hot_mf, label="Hot", color="red", linestyle="--")
+            plt.scatter(user_input, cold_val, color="blue")
+            plt.scatter(user_input, medium_val, color="orange")
+            plt.scatter(user_input, hot_val, color="red")
+            plt.legend()
+            plt.grid()
+            plt.title("Gaussian Membership Functions")
+            plt.show()
+
+        case 5:  # Generalized Bell MF
+            user_input = float(input("Enter the temperature: "))
+            ac, cc = 5, 15
+            center_c = np.mean([ac, cc])
+            a_c = (cc - ac) / 4
+            b_c = 1
+            am, cm = 12, 29
+            center_m = np.mean([am, cm])
+            a_m = (cm - am) / 4
+            b_m = 1
+            ah, ch = 25, 55
+            center_h = np.mean([ah, ch])
+            a_h = (ch - ah) / 4
+            b_h = 1
+            x = np.linspace(min(ac, am, ah), max(cc, cm, ch), 100)
+
+            cold_mf = generalized_bell_mf(x, center_c, a_c, b_c)
+            medium_mf = generalized_bell_mf(x, center_m, a_m, b_m)
+            hot_mf = generalized_bell_mf(x, center_h, a_h, b_h)
+
+            cold_val = generalized_bell_mf(user_input, center_c, a_c, b_c)
+            medium_val = generalized_bell_mf(user_input, center_m, a_m, b_m)
+            hot_val = generalized_bell_mf(user_input, center_h, a_h, b_h)
+
+            print("Cold:", cold_val)
+            print("Medium:", medium_val)
+            print("Hot:", hot_val)
+
+            plt.plot(x, cold_mf, label="Cold", color="blue", linestyle="--")
+            plt.plot(x, medium_mf, label="Medium", color="orange", linestyle="--")
+            plt.plot(x, hot_mf, label="Hot", color="red", linestyle="--")
+            plt.scatter(user_input, cold_val, color="blue")
+            plt.scatter(user_input, medium_val, color="orange")
+            plt.scatter(user_input, hot_val, color="red")
+            plt.legend()
+            plt.grid()
+            plt.title("Generalized Bell Membership Functions")
+            plt.show()
+
+        case 6:
+            print("Exiting the program. Goodbye!")
+            break
+
+        case _:
+            print("Invalid choice. Please enter a number from 1 to 6.")
+-------------------------------------------------------------------------------------------------
+Core of a fuzzy set
+ii. Support of a fuzzy set.
+iii. Crossover points of a fuzzy set.
+iv. Bandwidth of a fuzzy set.
+v. Convexity of a fuzzy set.
+
+a = [('x1', 0.6), ('x2', 0.8), ('x3', 1), ('x4', 1), ('x5', 0), ('x6', 0.2), ('x7', 0.5), ('x8', 0.5)]
+
+core = []
+support = []
+normality = False
+crossover_point = []
+
+core_threshold = 1.0
+support_threshold = 0.0
+crossover_threshold = 0.5
+
+# Ensure consistent order
+for name, value in a:
+    if value == core_threshold:
+        core.append(name)
+    if value > support_threshold:
+        support.append(name)
+    if value == crossover_threshold:
+        crossover_point.append(name)
+
+if core:
+    normality = True
+
+print("Core:", core)
+print("Support:", support)
+print("Normality:", normality)
+print("Crossover Point:", crossover_point)
+
+if len(crossover_point) >= 2:
+    print("Bandwidth:", crossover_point[0], '-', crossover_point[1])
+else:
+    print("Bandwidth: Cannot be calculated with less than 2 crossover points.")
+------------------------------------------------------------------------------------------
+Max-Product Composition
+
+import numpy as np
+
+def fuzzy_cartesian_product(l1, l2):
+    return [min(l1[i][1], l2[j][1]) for i in range(len(l1)) for j in range(len(l2))]
+
+# Fuzzy sets
+p = [('P1', 0.2), ('P2', 0.4), ('P3', 0.6), ('P4', 0.8)]
+d = [('D1', 0.4), ('D2', 0.5), ('D3', 0.7), ('D4', 0.2)]
+s = [('S1', 0.6), ('S2', 0.7), ('S3', 0.9), ('S4', 0.3)]
+
+P = [x[0] for x in p]
+D = [x[0] for x in d]
+S = [x[0] for x in s]
+
+# R_PD matrix
+R_PD = []
+print("R_PD:")
+for pi in p:
+    row = fuzzy_cartesian_product([pi], d)
+    R_PD.append(row)
+R_PD = np.array(R_PD).reshape(len(P), len(D))
+print(R_PD)
+
+# R_DS matrix
+R_DS = []
+print("\nR_DS:")
+for di in d:
+    row = fuzzy_cartesian_product([di], s)
+    R_DS.append(row)
+R_DS = np.array(R_DS).reshape(len(D), len(S))
+print(R_DS)
+
+# Max-min composition result
+result = np.zeros((len(P), len(S)))
+
+for i in range(len(P)):
+    for j in range(len(S)):
+        temp = [min(R_PD[i][k], R_DS[k][j]) for k in range(len(D))]
+        result[i][j] = max(temp)
+
+print("\nMax-Min Composition Result (P x S):")
+print(result)
+
+# Association output
+print("\nFuzzy Associations between Products and Sellers:")
+for i in range(len(P)):
+    for j in range(len(S)):
+        print(f"Association between {P[i]} and {S[j]}: {result[i, j]:.2f}")
+
+--------------------------------------------------------------------------------
+implement the fuzzy distance matrices :
+i) eucledian distance
+ii)Hamming distance
+
+import numpy as np
+
+def fuzzy_euclidean_distance(A, B):
+    A = np.array(A)
+    B = np.array(B)
+    return np.sqrt(np.sum((A - B) ** 2))
+
+def fuzzy_hamming_distance(A, B):
+    A = np.array(A)
+    B = np.array(B)
+    return np.sum(np.abs(A - B))
+
+# Sample fuzzy sets
+A = [0.2, 0.5, 0.7, 1.0]
+B = [0.3, 0.4, 0.6, 0.9]
+
+# Calculations
+euclidean_dist = fuzzy_euclidean_distance(A, B)
+hamming_dist = fuzzy_hamming_distance(A, B)
+
+# Output
+print(f"Fuzzy Euclidean Distance: {euclidean_dist:.4f}")
+print(f"Fuzzy Hamming Distance: {hamming_dist:.4f}")
+------------------------------------------------------------------------------------
